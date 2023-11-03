@@ -1,5 +1,7 @@
 import express, { Application, Request, Response } from 'express';
 import 'dotenv/config';
+import swaggerUi from 'swagger-ui-express';
+import * as swaggerDocument from './swagger.json';
 import routes from './routes';
 import connectDB from './database';
 
@@ -17,6 +19,7 @@ class App {
   }
 
   private middlewares() {
+    this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     this.app.use(express.json());
     this.app.disable('x-powered-by');
   }
@@ -39,9 +42,9 @@ class App {
 }
 async function main() {
   try {
-    await connectDB();
     const app = new App();
     app.listen();
+    await connectDB();
   } catch (error) {
     console.error(error);
   }
