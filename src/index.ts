@@ -1,5 +1,7 @@
 import express, { Application, Request, Response } from 'express';
 import 'dotenv/config';
+import routes from './routes';
+import connectDB from './database';
 
 class App {
   public app: Application;
@@ -20,6 +22,8 @@ class App {
   }
 
   private routes() {
+    this.app.use('/api/v1', routes);
+
     this.app.use('/', (req: Request, res: Response) => {
       res.json({
         message: 'Hello from auth 🔒',
@@ -33,6 +37,14 @@ class App {
     });
   }
 }
+async function main() {
+  try {
+    await connectDB();
+    const app = new App();
+    app.listen();
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-const app = new App();
-app.listen();
+main();
