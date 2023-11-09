@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import User from '../../models/user.model';
 
 const login = async (req: Request, res: Response): Promise<Response> => {
@@ -19,8 +20,22 @@ const login = async (req: Request, res: Response): Promise<Response> => {
     if (!isMatch) {
       return res.status(401).json({
         message: 'The password is incorrect',
+        error: true,
+        data: {},
       });
     }
+
+    const payload = {
+      id: userFound.id,
+      username: userFound.username,
+      email: userFound.email,
+    };
+
+    const token = jwt.sign(
+      payload,
+      String(process.env.JWT_SECRET),
+      { expiresIn: '1d' },
+    );
 
     return res.json({
       error: false,
@@ -28,6 +43,7 @@ const login = async (req: Request, res: Response): Promise<Response> => {
         id: userFound.id,
         username: userFound.username,
         email: userFound.email,
+        token,
       },
       message: '',
     });
