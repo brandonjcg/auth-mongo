@@ -19,3 +19,17 @@ export const successResponse = (
     message: message ?? '',
   });
 };
+
+export const errorResponse = (
+  res: Response,
+  config: ResponseConfig,
+  status: number = 500,
+) => {
+  const { data, message } = config;
+
+  return res.status(status).json({
+    error: true,
+    data: data ?? {},
+    message: message ?? '',
+  });
+};

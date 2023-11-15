@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { errorResponse } from '../utils';
 
 const validateSchema = (schema: any) => (
   req: Request,
@@ -9,11 +10,11 @@ const validateSchema = (schema: any) => (
     schema.parse(req.body);
     next();
   } catch (error: any) {
-    res.status(409).json({
-      message: error.errors.map((item: any) => item.message),
-      error: true,
-      data: {},
-    });
+    errorResponse(
+      res,
+      { message: error.errors.map((item: any) => item.message) },
+      409,
+    );
   }
 };
 

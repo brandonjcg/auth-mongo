@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import User from '../../models/user.model';
-import { successResponse } from '../../utils';
+import { errorResponse, successResponse } from '../../utils';
 
 const readUsers = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -10,11 +10,10 @@ const readUsers = async (req: Request, res: Response): Promise<Response> => {
       data: users,
     });
   } catch (err: any) {
-    return res.status(500).json({
-      message: `Error: ${err.message}`,
-      error: err,
-      data: {},
-    });
+    return errorResponse(
+      res,
+      { message: `Error: ${err.message}` },
+    );
   }
 };
 

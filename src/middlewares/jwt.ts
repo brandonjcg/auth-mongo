@@ -1,45 +1,46 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { errorResponse } from '../utils';
 
 const checkAuth = (req: Request, res: Response, next: NextFunction) => {
   try {
     const { authorization } = req.headers;
 
     if (!authorization) {
-      return res.status(401).json({
-        message: 'Missing authorization header',
-        error: true,
-        data: {},
-      });
+      return errorResponse(
+        res,
+        { message: 'Missing authorization header' },
+        401,
+      );
     }
 
     const [, token] = authorization.split(' ');
 
     if (!token) {
-      return res.status(401).json({
-        message: 'Missing token',
-        error: true,
-        data: {},
-      });
+      return errorResponse(
+        res,
+        { message: 'Missing token' },
+        401,
+      );
     }
 
     const decoded = jwt.verify(token, String(process.env.JWT_SECRET));
 
     if (!decoded) {
-      return res.status(401).json({
-        message: 'Invalid token',
-        error: true,
-        data: {},
-      });
+      return errorResponse(
+        res,
+        { message: 'Invalid token' },
+        401,
+      );
     }
 
     return next();
   } catch (err: any) {
-    return res.status(401).json({
-      message: `Token error: ${err.message}`,
-      error: true,
-      data: {},
-    });
+    return errorResponse(
+      res,
+      { message: `Token error: ${err.message}` },
+      401,
+    );
   }
 };
 

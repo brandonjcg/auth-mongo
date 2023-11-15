@@ -4,6 +4,7 @@ import swaggerUi from 'swagger-ui-express';
 import * as swaggerDocument from './swagger.json';
 import routes from './routes';
 import connectDB from './database';
+import { successResponse } from './utils';
 
 class App {
   public app: Application;
@@ -28,9 +29,10 @@ class App {
     this.app.use('/api/v1', routes);
 
     this.app.use('/', (req: Request, res: Response) => {
-      res.json({
-        message: 'Hello from auth 🔒',
-      });
+      successResponse(
+        res,
+        { message: 'Hello from auth 🔒' },
+      );
     });
   }
 

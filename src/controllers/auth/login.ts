@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../../models/user.model';
-import { successResponse } from '../../utils';
+import { errorResponse, successResponse } from '../../utils';
 
 const login = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -10,20 +10,20 @@ const login = async (req: Request, res: Response): Promise<Response> => {
     const userFound = await User.findOne({ email });
 
     if (!userFound) {
-      return res.status(404).json({
-        message: 'Usuario no encontrado',
-        error: true,
-        data: {},
-      });
+      return errorResponse(
+        res,
+        { message: 'User not found' },
+        404,
+      );
     }
 
     const isMatch = await bcrypt.compare(password, userFound.password);
     if (!isMatch) {
-      return res.status(401).json({
-        message: 'The password is incorrect',
-        error: true,
-        data: {},
-      });
+      return errorResponse(
+        res,
+        { message: 'The password is incorrect' },
+        401,
+      );
     }
 
     const payload = {
@@ -47,9 +47,10 @@ const login = async (req: Request, res: Response): Promise<Response> => {
       },
     });
   } catch (error: any) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    return errorResponse(
+      res,
+      { message: `Error: ${error.message}` },
+    );
   }
 };
 
