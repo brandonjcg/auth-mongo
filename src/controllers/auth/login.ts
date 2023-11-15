@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../../models/user.model';
 import { errorResponse, successResponse } from '../../utils';
+import { HTTP_CODES } from '../../constants';
 
 const login = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -13,7 +14,7 @@ const login = async (req: Request, res: Response): Promise<Response> => {
       return errorResponse(
         res,
         { message: 'User not found' },
-        404,
+        HTTP_CODES.NOT_FOUND,
       );
     }
 
@@ -22,7 +23,7 @@ const login = async (req: Request, res: Response): Promise<Response> => {
       return errorResponse(
         res,
         { message: 'The password is incorrect' },
-        401,
+        HTTP_CODES.UNAUTHORIZED,
       );
     }
 

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { errorResponse } from '../utils';
+import { HTTP_CODES } from '../constants';
 
 const validateSchema = (schema: any) => (
   req: Request,
@@ -13,7 +14,7 @@ const validateSchema = (schema: any) => (
     errorResponse(
       res,
       { message: error.errors.map((item: any) => item.message) },
-      409,
+      HTTP_CODES.CONFLICT,
     );
   }
 };

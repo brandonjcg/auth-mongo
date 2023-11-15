@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import User from '../../models/user.model';
 import { errorResponse, successResponse } from '../../utils';
+import { HTTP_CODES } from '../../constants';
 
 const deleteUser = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -9,7 +10,7 @@ const deleteUser = async (req: Request, res: Response): Promise<Response> => {
       return errorResponse(
         res,
         { message: 'User not found' },
-        404,
+        HTTP_CODES.NOT_FOUND,
       );
     }
 

@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { HTTP_CODES } from '../constants';
 
 export interface ResponseConfig {
   data?: any;
@@ -9,7 +10,7 @@ export interface ResponseConfig {
 export const successResponse = (
   res: Response,
   config: ResponseConfig,
-  status: number = 200,
+  status: number = HTTP_CODES.OK,
 ) => {
   const { data, message } = config;
 
@@ -23,7 +24,7 @@ export const successResponse = (
 export const errorResponse = (
   res: Response,
   config: ResponseConfig,
-  status: number = 500,
+  status: number = HTTP_CODES.SERVER_ERROR,
 ) => {
   const { data, message } = config;
 

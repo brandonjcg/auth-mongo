@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../../models/user.model';
 import { errorResponse, successResponse } from '../../utils';
+import { HTTP_CODES } from '../../constants';
 
 const createUser = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -12,7 +13,7 @@ const createUser = async (req: Request, res: Response): Promise<Response> => {
       return errorResponse(
         res,
         { message: 'Email already exists' },
-        409,
+        HTTP_CODES.CONFLICT,
       );
     }
 
@@ -30,7 +31,7 @@ const createUser = async (req: Request, res: Response): Promise<Response> => {
         data: savedUser,
         message: 'User created successfully',
       },
-      201,
+      HTTP_CODES.CREATED,
     );
   } catch (err: any) {
     return errorResponse(

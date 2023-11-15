@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { errorResponse } from '../utils';
+import { HTTP_CODES } from '../constants';
 
 const checkAuth = (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -10,7 +11,7 @@ const checkAuth = (req: Request, res: Response, next: NextFunction) => {
       return errorResponse(
         res,
         { message: 'Missing authorization header' },
-        401,
+        HTTP_CODES.UNAUTHORIZED,
       );
     }
 
@@ -20,7 +21,7 @@ const checkAuth = (req: Request, res: Response, next: NextFunction) => {
       return errorResponse(
         res,
         { message: 'Missing token' },
-        401,
+        HTTP_CODES.UNAUTHORIZED,
       );
     }
 
@@ -30,7 +31,7 @@ const checkAuth = (req: Request, res: Response, next: NextFunction) => {
       return errorResponse(
         res,
         { message: 'Invalid token' },
-        401,
+        HTTP_CODES.UNAUTHORIZED,
       );
     }
 
@@ -39,7 +40,7 @@ const checkAuth = (req: Request, res: Response, next: NextFunction) => {
     return errorResponse(
       res,
       { message: `Token error: ${err.message}` },
-      401,
+      HTTP_CODES.UNAUTHORIZED,
     );
   }
 };
