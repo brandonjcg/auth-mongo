@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import User from '../../models/user.model';
+import { successResponse } from '../../utils';
 
 const deleteUser = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -12,8 +13,7 @@ const deleteUser = async (req: Request, res: Response): Promise<Response> => {
       });
     }
 
-    return res.json({
-      error: false,
+    return successResponse(res, {
       data: user,
       message: 'User deleted successfully',
     });

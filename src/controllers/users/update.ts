@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../../models/user.model';
+import { successResponse } from '../../utils';
 
 const updateUser = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -15,8 +16,7 @@ const updateUser = async (req: Request, res: Response): Promise<Response> => {
       { new: true },
     );
 
-    return res.json({
-      error: false,
+    return successResponse(res, {
       data: savedUser,
       message: 'User updated successfully',
     });

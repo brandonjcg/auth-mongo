@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../../models/user.model';
+import { successResponse } from '../../utils';
 
 const login = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -37,15 +38,13 @@ const login = async (req: Request, res: Response): Promise<Response> => {
       { expiresIn: '1d' },
     );
 
-    return res.json({
-      error: false,
+    return successResponse(res, {
       data: {
         id: userFound.id,
         username: userFound.username,
         email: userFound.email,
         token,
       },
-      message: '',
     });
   } catch (error: any) {
     return res.status(500).json({

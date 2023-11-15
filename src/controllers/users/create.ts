@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../../models/user.model';
+import { successResponse } from '../../utils';
 
 const createUser = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -23,11 +24,14 @@ const createUser = async (req: Request, res: Response): Promise<Response> => {
     });
     const savedUser = await user.save();
 
-    return res.json({
-      error: false,
-      data: savedUser,
-      message: 'User created successfully',
-    });
+    return successResponse(
+      res,
+      {
+        data: savedUser,
+        message: 'User created successfully',
+      },
+      201,
+    );
   } catch (err: any) {
     return res.status(500).json({
       message: `Error: ${err.message}`,
