@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../../models/user.model';
+import { errorResponse, successResponse } from '../../utils';
+import { HTTP_CODES } from '../../constants';
 
 const createUser = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -8,11 +10,11 @@ const createUser = async (req: Request, res: Response): Promise<Response> => {
 
     const isEmailExist = await User.findOne({ email });
     if (isEmailExist) {
-      return res.status(409).json({
-        message: 'Email ya registrado',
-        error: true,
-        data: {},
-      });
+      return errorResponse(
+        res,
+        { message: 'Email already exists' },
+        HTTP_CODES.CONFLICT,
+      );
     }
 
     const password = await bcrypt.hash(req.body.password, 10);
@@ -23,17 +25,19 @@ const createUser = async (req: Request, res: Response): Promise<Response> => {
     });
     const savedUser = await user.save();
 
-    return res.json({
-      error: false,
-      data: savedUser,
-      message: 'User created successfully',
-    });
+    return successResponse(
+      res,
+      {
+        data: savedUser,
+        message: 'User created successfully',
+      },
+      HTTP_CODES.CREATED,
+    );
   } catch (err: any) {
-    return res.status(500).json({
-      message: `Error: ${err.message}`,
-      error: err,
-      data: {},
-    });
+    return errorResponse(
+      res,
+      { message: `Error: ${err.message}` },
+    );
   }
 };
 

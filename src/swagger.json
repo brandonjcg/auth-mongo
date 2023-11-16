@@ -103,6 +103,9 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -122,11 +125,17 @@
           }
         ],
         "responses": {
-          "200": {
+          "201": {
             "description": "User created successfully",
             "schema": {
               "$ref": "#/definitions/User"
             }
+          },
+          "409": {
+            "description": "Conflict - User already exists"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -151,6 +160,12 @@
             "schema": {
               "$ref": "#/definitions/UserWithId"
             }
+          },
+          "404": {
+            "description": "Not found - User not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -178,6 +193,12 @@
         "responses": {
           "200": {
             "description": "User deleted successfully"
+          },
+          "404": {
+            "description": "Not found - User not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

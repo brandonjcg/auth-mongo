@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../../models/user.model';
+import { errorResponse, successResponse } from '../../utils';
+import { HTTP_CODES } from '../../constants';
 
 const login = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -9,20 +11,20 @@ const login = async (req: Request, res: Response): Promise<Response> => {
     const userFound = await User.findOne({ email });
 
     if (!userFound) {
-      return res.status(404).json({
-        message: 'Usuario no encontrado',
-        error: true,
-        data: {},
-      });
+      return errorResponse(
+        res,
+        { message: 'User not found' },
+        HTTP_CODES.NOT_FOUND,
+      );
     }
 
     const isMatch = await bcrypt.compare(password, userFound.password);
     if (!isMatch) {
-      return res.status(401).json({
-        message: 'The password is incorrect',
-        error: true,
-        data: {},
-      });
+      return errorResponse(
+        res,
+        { message: 'The password is incorrect' },
+        HTTP_CODES.UNAUTHORIZED,
+      );
     }
 
     const payload = {
@@ -37,20 +39,19 @@ const login = async (req: Request, res: Response): Promise<Response> => {
       { expiresIn: '1d' },
     );
 
-    return res.json({
-      error: false,
+    return successResponse(res, {
       data: {
         id: userFound.id,
         username: userFound.username,
         email: userFound.email,
         token,
       },
-      message: '',
     });
   } catch (error: any) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    return errorResponse(
+      res,
+      { message: `Error: ${error.message}` },
+    );
   }
 };
 
